@@ -1,4 +1,4 @@
-package com.david.wechat;
+package com.hupu.wechat;
 
 import java.util.Map;
 
@@ -20,7 +20,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
-import com.david.utils.CommonUtils;
+import com.hupu.utils.CommonUtils;
 
 public class WechatInterceptor extends HandlerInterceptorAdapter {
 

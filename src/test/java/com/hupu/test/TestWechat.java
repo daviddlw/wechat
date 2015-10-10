@@ -1,24 +1,16 @@
-package com.david.test;
-
-import static org.junit.Assert.*;
-
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+package com.hupu.test;
 
 import me.chanjar.weixin.common.exception.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpInMemoryConfigStorage;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.api.WxMpServiceImpl;
 import me.chanjar.weixin.mp.bean.WxMpCustomMessage;
-import me.chanjar.weixin.mp.bean.result.WxMpMaterialUploadResult;
 import me.chanjar.weixin.mp.bean.result.WxMpUser;
 
-import org.apache.commons.codec.digest.DigestUtils;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.david.utils.CommonUtils;
+import com.hupu.utils.CommonUtils;
 
 /**
  * 微信公众号测试

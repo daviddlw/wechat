@@ -1,4 +1,4 @@
-package com.david.controller;
+package com.hupu.controller;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

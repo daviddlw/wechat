@@ -1,4 +1,4 @@
-package com.david.test;
+package com.hupu.test;
 
 import static org.junit.Assert.*;
 

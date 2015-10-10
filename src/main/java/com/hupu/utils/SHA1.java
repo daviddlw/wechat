@@ -1,4 +1,4 @@
-package com.david.utils;
+package com.hupu.utils;
 
 import java.security.MessageDigest;
 

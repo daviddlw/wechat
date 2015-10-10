@@ -7,15 +7,15 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
 
 	<!-- 放在这边是全局的application的注入 -->
-	<context:component-scan base-package="com.david" />
+	<context:component-scan base-package="com.hupu" />
 	<mvc:annotation-driven />
 
 	<context:property-placeholder location="classpath:config.properties" />
 
 	<mvc:interceptors>
 		<mvc:interceptor>
-			<mvc:mapping path="/**" />
-			<bean class="com.david.wechat.WechatInterceptor"></bean>
+			<mvc:mapping path="/wechat/**" />
+			<bean class="com.hupu.wechat.WechatInterceptor"></bean>
 		</mvc:interceptor>
 
 	</mvc:interceptors>
