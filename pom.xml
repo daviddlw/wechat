@@ -24,6 +24,7 @@
 
 	<dependencies>
 
+		<!-- 微信订阅号与服务号API -->
 		<dependency>
 			<groupId>me.chanjar</groupId>
 			<artifactId>weixin-java-mp</artifactId>
@@ -344,5 +345,27 @@
 			</resource>
 		</resources>
 	</build>
-
+	<profiles>
+		<profile>
+			<id>dev</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<properties>
+				<wechat.appid>wx63ac9d2096253fc0</wechat.appid>
+				<wechat.appsecrect>5c1ab5f0bd3872b06a823eb7c532c311</wechat.appsecrect>
+				<wechat.apptoken>arenacloud_token_1</wechat.apptoken>
+				<wechat.aeskey>QG7OitGVpU344C8HmYOI8AbPfFbDW4p0cu0eg5oxYIA</wechat.aeskey>
+			</properties>
+		</profile>
+		<profile>
+			<id>prod</id>
+			<properties>
+				<wechat.appid>wx63ac9d2096253fc0</wechat.appid>
+				<wechat.appsecrect>5c1ab5f0bd3872b06a823eb7c532c311</wechat.appsecrect>
+				<wechat.apptoken>arenacloud_token_1</wechat.apptoken>
+				<wechat.aeskey>QG7OitGVpU344C8HmYOI8AbPfFbDW4p0cu0eg5oxYIA</wechat.aeskey>
+			</properties>
+		</profile>
+	</profiles>
 </project>

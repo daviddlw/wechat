@@ -24,11 +24,4 @@ public class HomeController {
 	public ModelAndView index() {
 		return new ModelAndView("index");
 	}
-
-	@ResponseBody
-	@RequestMapping(value = "/redirectPage", method = RequestMethod.GET)
-	public void redirectPage() {
-
-	}
-
 }

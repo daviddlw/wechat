@@ -1,4 +1,4 @@
-package com.david.wechat;
+package com.david.utils;
 
 import java.security.MessageDigest;
 
