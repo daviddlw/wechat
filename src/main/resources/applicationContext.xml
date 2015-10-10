@@ -12,13 +12,13 @@
 
 	<context:property-placeholder location="classpath:config.properties" />
 
-	<mvc:interceptors>
+<!-- 	<mvc:interceptors>
 		<mvc:interceptor>
 			<mvc:mapping path="/wechat/**" />
 			<bean class="com.hupu.wechat.WechatInterceptor"></bean>
 		</mvc:interceptor>
 
-	</mvc:interceptors>
+	</mvc:interceptors> -->
 
 	<bean id="wxMpInMemoryConfigStorage" class="me.chanjar.weixin.mp.api.WxMpInMemoryConfigStorage">
 		<property name="appId" value="${wechat.appid}"></property>

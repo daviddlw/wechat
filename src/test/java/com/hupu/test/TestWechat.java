@@ -1,11 +1,16 @@
 package com.hupu.test;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
 import me.chanjar.weixin.common.exception.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpInMemoryConfigStorage;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.api.WxMpServiceImpl;
 import me.chanjar.weixin.mp.bean.WxMpCustomMessage;
 import me.chanjar.weixin.mp.bean.result.WxMpUser;
+import me.chanjar.weixin.mp.bean.result.WxMpUserSummary;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -89,6 +94,21 @@ public class TestWechat {
 		
 		WxMpUser wxMpUser = wxMpService.userInfo(david_openid, "zh_CN");
 		System.err.println(wxMpUser);
+		
+		Calendar sc = Calendar.getInstance();
+		sc.set(2015, 9, 8, 0, 0, 0);
+		
+		Calendar ec = Calendar.getInstance();
+		ec.set(2015, 9, 10, 23, 59, 59);
+		
+		Date st = sc.getTime();
+		Date et=  ec.getTime();
+		
+		List<WxMpUserSummary> ls = wxMpService.getUserSummary(st, et);
+		System.err.println(ls.size());
+		for (WxMpUserSummary item : ls) {
+			System.err.println(item);
+		}
 		
 	}
 	
