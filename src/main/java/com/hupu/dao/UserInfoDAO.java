@@ -8,4 +8,6 @@ public interface UserInfoDAO {
 	
 	UserInfoDTO queryUserInfo(int id);
 	
+	UserInfoDTO queryUserInfoByPhone(String cellphone);
+	
 }

@@ -27,4 +27,10 @@
 		user_info where status>0 and id=#{id}
 	</select>
 
+	<select id="queryUserInfoByPhone" parameterType="String" resultMap="userInfoMap">
+		select
+		id, name, gender, cellphone, create_time, update_time, status from
+		user_info where status>0 and cellphone=#{cellphone}
+	</select>
+
 </mapper>

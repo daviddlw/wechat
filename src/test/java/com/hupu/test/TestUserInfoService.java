@@ -41,5 +41,11 @@ public class TestUserInfoService {
 		UserInfoDTO userInfoDTO = userInfoService.queryUserInfo(1);
 		System.err.println(userInfoDTO);
 	}
+	
+	@Test
+	public void testQueryUserInfo2() {		
+		UserInfoDTO userInfoDTO = userInfoService.queryUserInfo("13661111111");
+		System.err.println(userInfoDTO);
+	}
 
 }

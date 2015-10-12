@@ -121,7 +121,7 @@ public class WechatController {
 		Map<String, Object> resultMap = new HashMap<>();
 		logger.info("name: " + name);
 		logger.info("sex: " + sex);
-		logger.info("name: " + name);
+		logger.info("phone: " + name);
 
 		UserInfoDTO userInfoDTO = new UserInfoDTO();
 		userInfoDTO.setName(name);
@@ -216,6 +216,15 @@ public class WechatController {
 		}
 
 		return new ModelAndView("home");
+	}
+	
+	@ResponseBody
+	@RequestMapping(value="/wechat/getUserInfo",method=RequestMethod.POST)
+	public UserInfoDTO getUserInfoDTO(String phone) {
+		logger.info("phone: " + phone);
+
+		UserInfoDTO userInfoDTO = userInfoService.queryUserInfo(phone);
+		return userInfoDTO;
 	}
 
 	@RequestMapping(value = "/home")

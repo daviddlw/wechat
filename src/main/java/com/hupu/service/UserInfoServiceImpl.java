@@ -23,4 +23,9 @@ public class UserInfoServiceImpl implements UserInfoService{
 		return userInfoDAO.queryUserInfo(id);
 	}
 
+	@Override
+	public UserInfoDTO queryUserInfo(String cellphone) {
+		return userInfoDAO.queryUserInfoByPhone(cellphone);
+	}
+
 }
