@@ -1,5 +1,6 @@
 package com.hupu.wechat;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,11 +20,11 @@ import me.chanjar.weixin.mp.util.crypto.WxMpCryptUtil;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.hupu.utils.CommonUtils;
 
@@ -45,7 +46,7 @@ public class WechatController {
 
 		wxMpService = new WxMpServiceImpl();
 
-		WxMpInMemoryConfigStorage wxMpConfigStorage = new WxMpInMemoryConfigStorage();
+		wxMpConfigStorage = new WxMpInMemoryConfigStorage();
 		wxMpConfigStorage.setAppId(CommonUtils.appid);
 		wxMpConfigStorage.setSecret(CommonUtils.appsecrect);
 		wxMpConfigStorage.setToken(CommonUtils.token);
@@ -95,7 +96,7 @@ public class WechatController {
 
 	@ResponseBody
 	@RequestMapping(value = "/wechat", method = RequestMethod.GET)
-	public void wechat(HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView wechat(HttpServletRequest request, HttpServletResponse response) {
 
 		try {
 			logger.info("wechat.test: " + wxMpService.userInfo(david_openid, "zh_CN"));
@@ -150,9 +151,28 @@ public class WechatController {
 			if (outMessage != null) {
 				response.getWriter().write(outMessage.toEncryptedXml(wxMpConfigStorage));
 			}
+
+			msgSignature = "david_signature";
+			nonce = "nonce";
+			timestamp = String.valueOf(System.currentTimeMillis());
+
+			Map<String, Object> queryMap = new HashMap<String, Object>();
+			queryMap.put("signature", msgSignature);
+			queryMap.put("nonce", nonce);
+			queryMap.put("timestamp", timestamp);
+			queryMap.put("echostr", echostr);
+
+			return new ModelAndView("home", queryMap);
+
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
 
+		return new ModelAndView("home");
+	}
+
+	@RequestMapping(value = "/home")
+	public ModelAndView home() {
+		return new ModelAndView("home");
 	}
 }

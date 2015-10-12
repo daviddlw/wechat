@@ -20,7 +20,7 @@
 
 	</mvc:interceptors> -->
 
-	<bean id="wxMpInMemoryConfigStorage" class="me.chanjar.weixin.mp.api.WxMpInMemoryConfigStorage">
+<!-- 	<bean id="wxMpInMemoryConfigStorage" class="me.chanjar.weixin.mp.api.WxMpInMemoryConfigStorage">
 		<property name="appId" value="${wechat.appid}"></property>
 		<property name="secret" value="${wechat.appsecrect}"></property>
 		<property name="token" value="${wechat.apptoken}"></property>
@@ -29,6 +29,6 @@
 
 	<bean id="wxMpService" class="me.chanjar.weixin.mp.api.WxMpServiceImpl">
 		<property name="wxMpConfigStorage" ref="wxMpInMemoryConfigStorage" />
-	</bean>
+	</bean> -->
 
 </beans>
