@@ -331,8 +331,8 @@
 				<label>性别：</label>
 				<ul></ul>
 				<span><input type="radio" checked="checked" name="sex"
-					value="m">男</span> <span><input type="radio" name="sex"
-					value="fm">女</span>
+					value="1">男</span> <span><input type="radio" name="sex"
+					value="2">女</span>
 			</div>
 			<div class="cell">
 				<label>手机号：</label> <input type="text" name="phone" class="phone"
@@ -369,9 +369,9 @@
 		var nonceStr_arg = '<c:out value="${nonce}" />';
 		var signature_arg = '<c:out value="${signature}" />';
 
-		alert("ts: " + timestamp_arg + ", nonce: " + nonceStr_arg + ", "
-				+ signature_arg);
-
+		/* 		alert("ts: " + timestamp_arg + ", nonce: " + nonceStr_arg + ", "
+		 + signature_arg);
+		 */
 		new TouchPaging({});
 		$(function() {
 			wx.config({
@@ -436,13 +436,12 @@
 						if ($.trim($('.name').val()).length == 0
 								|| $.trim($('.phone').val()).length == 0)
 							return;
-						$.post('http://www.arenacloud.com/share/weixin/w', {
+						$.post('http://events.arenacloud.com/', {
 							data : encodeURIComponent('{"name":"'
-									+ $('.name').val() + '","phone":"'
-									+ $('.phone').val() + '"}'),
-							s : 1,
-							a : 'wx_awdc_vip_ticket',
-							token : "tokentoken"
+									+ $('.name').val() + '{"sex":"'
+									+ $('.sex').val() + '","phone":"'
+									+ $('.phone').val() + '"}')
+
 						}, function(response) {
 							if (response.code == '200') {
 								$('#suc').show();

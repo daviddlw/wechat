@@ -1,5 +1,7 @@
 package com.hupu.wechat;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -81,6 +83,19 @@ public class WechatController {
 	}
 
 	@ResponseBody
+	@RequestMapping(value = "/checkItWorks", method = RequestMethod.GET)
+	public String checkItWorks() {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String result = sdf.format(new Date());
+		return result;
+	}
+
+	@RequestMapping(value = "/index.jsp", method = RequestMethod.GET)
+	public ModelAndView index() {
+		return new ModelAndView("index");
+	}
+
+	@ResponseBody
 	@RequestMapping(value = "/wechat/demo", method = RequestMethod.GET)
 	public WxMpUser wechatIn(HttpServletRequest request, HttpServletResponse response) {
 		WxMpUser wxMpUser = new WxMpUser();
@@ -92,6 +107,19 @@ public class WechatController {
 		}
 
 		return wxMpUser;
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/wechat/saveUserInfo", method = RequestMethod.POST)
+	public Map<String, Object> saveUserInfo(String name, int sex, String phone) {
+		Map<String, Object> resultMap = new HashMap<>();
+		logger.info("name: " + name);
+		logger.info("sex: " + sex);
+		logger.info("name: " + name);
+		
+		resultMap.put("code", "200");
+
+		return resultMap;
 	}
 
 	@ResponseBody
