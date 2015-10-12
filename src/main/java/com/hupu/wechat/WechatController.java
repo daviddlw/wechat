@@ -99,6 +99,12 @@ public class WechatController {
 
 		try {
 			logger.info("wechat.test: " + wxMpService.userInfo(david_openid, "zh_CN"));
+			logger.info("wxMpConfigStorage: " + wxMpConfigStorage);
+			logger.info("wxMpConfigStorage.appid: " + wxMpConfigStorage.getAppId());
+			logger.info("wxMpConfigStorage.secret: " + wxMpConfigStorage.getSecret());
+			logger.info("wxMpConfigStorage.token: " + wxMpConfigStorage.getToken());
+			logger.info("wxMpConfigStorage.aeskey: " + wxMpConfigStorage.getAesKey());
+			logger.info("wxMpService: " + wxMpService + ", is null: " + (wxMpService == null));
 
 			response.setContentType("text/html;charset=utf-8");
 			response.setStatus(HttpServletResponse.SC_OK);
@@ -127,7 +133,7 @@ public class WechatController {
 				if (!wxMpService.checkSignature(msgSignature, timestamp, nonce)) {
 					// 消息签名不正确，说明不是公众平台发过来的消息
 
-					logger.info("");
+					logger.info("msg_sign is not correct");
 					response.getWriter().println(ILLGAL_REQUEST);
 				}
 				WxMpCryptUtil cryptUtil = new WxMpCryptUtil(wxMpConfigStorage);
