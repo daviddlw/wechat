@@ -319,7 +319,7 @@
 
 	</dependencies>
 	<build>
-		<finalName>ROOT</finalName>
+		<finalName>wechat-events</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.tomcat.maven</groupId>

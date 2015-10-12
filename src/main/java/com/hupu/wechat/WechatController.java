@@ -103,7 +103,7 @@ public class WechatController {
 			response.setContentType("text/html;charset=utf-8");
 			response.setStatus(HttpServletResponse.SC_OK);
 
-			String msgSignature = request.getParameter("msg_signature");
+			String msgSignature = request.getParameter("signature");
 			String nonce = request.getParameter("nonce");
 			String timestamp = request.getParameter("timestamp");
 			String echostr = request.getParameter("echostr");
