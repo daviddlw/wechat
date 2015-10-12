@@ -7,11 +7,11 @@ import org.apache.log4j.Logger;
 public class CommonUtils {
 
 	private static Logger logger = Logger.getLogger(CommonUtils.class);
-	public static boolean wechatFlag = true;
 	public static String appid = "wx63ac9d2096253fc0";
 	public static String appsecrect = "5c1ab5f0bd3872b06a823eb7c532c311";
 	public static String token = "arenacloud_token_1";
 	public static String aeskey = "QG7OitGVpU344C8HmYOI8AbPfFbDW4p0cu0eg5oxYIA";
+	public static String wechatFlag = "dev";
 
 	static {
 		try {
@@ -20,6 +20,7 @@ public class CommonUtils {
 			appsecrect = conf.getString("wechat.appsecrect", appsecrect);
 			token = conf.getString("wechat.apptoken", token);
 			aeskey = conf.getString("wechat.aeskey", aeskey);
+			wechatFlag = conf.getString("wechat.flag", wechatFlag);
 		} catch (ConfigurationException e) {
 			logger.error(e.getMessage(), e);
 		}

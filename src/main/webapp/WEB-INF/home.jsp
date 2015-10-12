@@ -324,8 +324,8 @@
 				<h1>您好，为方便中奖后与您取得联系， 请您必须要填写联系信息, 然后关注我们的公众号</h1>
 			</div>
 			<div class="cell">
-				<label>姓名：</label> <input type="text" name="name" class="name"
-					maxlength="10">
+				<label>姓名：</label> <input type="text" id="name" name="name"
+					class="name" maxlength="10">
 			</div>
 			<div class="cell">
 				<label>性别：</label>
@@ -359,7 +359,6 @@
 		<div class="mask" id="err" style="background-image: none;">
 			<div>提交失败，请重试</div>
 		</div>
-
 
 	</div>
 	<script src="js/zepto.min.js"></script>
@@ -407,6 +406,9 @@
 				});
 			});
 
+			//test
+			$("#page2").show();
+
 			$('#share').click(function() {
 				$('#dodo').show();
 			});
@@ -431,28 +433,62 @@
 						}
 					});
 
-			$('.submit').click(
-					function() {
-						if ($.trim($('.name').val()).length == 0
-								|| $.trim($('.phone').val()).length == 0)
-							return;
-						$.post('http://events.arenacloud.com/', {
-							data : encodeURIComponent('{"name":"'
-									+ $('.name').val() + '{"sex":"'
-									+ $('.sex').val() + '","phone":"'
-									+ $('.phone').val() + '"}')
+			$('.submit')
+					.click(
+							function() {
+								if ($.trim($('.name').val()).length == 0
+										|| $.trim($('.phone').val()).length == 0)
+									return;
+								var url = "http://events.arenacloud.com/wechat/saveUserInfo";
+								//var url = "http://172.16.28.176:8080/wechat-opensdk/wechat/saveUserInfo";
 
-						}, function(response) {
-							if (response.code == '200') {
-								$('#suc').show();
-								$('#page2').hide();
-								$('#dodo').hide();
-							} else {
-								document.getElementsByTagName("input").focus();
-								$('#err').show();
-							}
-						});
-					});
+								$.ajax({
+									url : url,
+									dataType : "json",
+									type : "POST",
+									data : {
+										name : $("input[name='name']").val(),
+										sex : $("input[name='sex']:checked").val(),
+										phone : $("input[name='phone']").val()
+									},
+									success : function(response) {
+										if (response.code == '200') {
+											$('#suc').show();
+											$('#page2').hide();
+											$('#dodo').hide();
+											setTimeout(function() {
+												$('#suc').hide();
+												$("#page2").show();
+											}, 1000);
+
+										} else {
+											document.getElementsByTagName(
+													"input").focus();
+											$('#err').show();
+										}
+									}
+								}
+
+								);
+
+								/* $.post(url, {
+									data : encodeURIComponent('{"name":"'
+											+ $('name').val() + '{"sex":"'
+											+ $('sex').val() + '","phone":"'
+											+ $('phone').val() + '"}')
+
+								}, function(response) {
+									if (response.code == '200') {
+										$('#suc').show();
+										$('#page2').hide();
+										$('#dodo').hide();
+									} else {
+										document.getElementsByTagName("input")
+												.focus();
+										$('#err').show();
+									}
+								}); */
+							});
 		});
 	</script>
 </body>

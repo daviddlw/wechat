@@ -22,12 +22,15 @@ import me.chanjar.weixin.mp.util.crypto.WxMpCryptUtil;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.hupu.dto.UserInfoDTO;
+import com.hupu.service.UserInfoService;
 import com.hupu.utils.CommonUtils;
 
 @Controller
@@ -39,6 +42,9 @@ public class WechatController {
 	private static WxMpService wxMpService;
 	private static WxMpInMemoryConfigStorage wxMpConfigStorage;
 	private static WxMpMessageRouter wxMpMessageRouter;
+
+	@Autowired
+	private UserInfoService userInfoService;
 
 	static {
 		init();
@@ -111,13 +117,26 @@ public class WechatController {
 
 	@ResponseBody
 	@RequestMapping(value = "/wechat/saveUserInfo", method = RequestMethod.POST)
-	public Map<String, Object> saveUserInfo(String name, int sex, String phone) {
+	public Map<String, Object> saveUserInfo(String name, Integer sex, String phone) {
 		Map<String, Object> resultMap = new HashMap<>();
 		logger.info("name: " + name);
 		logger.info("sex: " + sex);
 		logger.info("name: " + name);
-		
-		resultMap.put("code", "200");
+
+		UserInfoDTO userInfoDTO = new UserInfoDTO();
+		userInfoDTO.setName(name);
+		userInfoDTO.setGender(sex);
+		userInfoDTO.setCellphone(phone);
+
+		try {
+			int id = userInfoService.insertUserInfo(userInfoDTO);
+			logger.info("newid: " + id);
+
+			resultMap.put("code", "200");
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			resultMap.put("code", "500");
+		}
 
 		return resultMap;
 	}
@@ -180,9 +199,9 @@ public class WechatController {
 				response.getWriter().write(outMessage.toEncryptedXml(wxMpConfigStorage));
 			}
 
-			msgSignature = "david_signature";
-			nonce = "nonce";
-			timestamp = String.valueOf(System.currentTimeMillis());
+//			msgSignature = "david_signature";
+//			nonce = "nonce";
+//			timestamp = String.valueOf(System.currentTimeMillis());
 
 			Map<String, Object> queryMap = new HashMap<String, Object>();
 			queryMap.put("signature", msgSignature);

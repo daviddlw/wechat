@@ -113,7 +113,7 @@ public class TestWechat {
 	}
 	
 	@Test
-	public void testWechatTest() {
+	public void testWechatTest() {	
 		System.err.println(CommonUtils.wechatFlag);
 		System.err.println(CommonUtils.appid);
 		System.err.println(CommonUtils.appsecrect);
