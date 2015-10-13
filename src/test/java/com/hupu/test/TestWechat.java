@@ -5,12 +5,14 @@ import java.util.Date;
 import java.util.List;
 
 import me.chanjar.weixin.common.exception.WxErrorException;
+import me.chanjar.weixin.mp.api.WxMpConfigStorage;
 import me.chanjar.weixin.mp.api.WxMpInMemoryConfigStorage;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.api.WxMpServiceImpl;
 import me.chanjar.weixin.mp.bean.WxMpCustomMessage;
 import me.chanjar.weixin.mp.bean.result.WxMpUser;
 import me.chanjar.weixin.mp.bean.result.WxMpUserSummary;
+import me.chanjar.weixin.mp.util.crypto.WxMpCryptUtil;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -49,6 +51,49 @@ public class TestWechat {
 	}
 
 	@Test
+	public void testCheckSign() {
+		String timestamp = "1444714506";
+		String nonce = "214745455";
+		String signature = "2e42d24dda7f874601f2b0273e1b6b59e5cd737a";
+		boolean flag = wxMpService.checkSignature(timestamp, nonce, signature);
+		System.err.println(flag);
+		System.err.println(flag==true);
+		
+		String echostr = "7793887707463023370";
+		
+		WxMpInMemoryConfigStorage wxMpConfigStorage = new WxMpInMemoryConfigStorage();
+		wxMpConfigStorage.setAppId(CommonUtils.appid);
+		wxMpConfigStorage.setSecret(CommonUtils.appsecrect);
+		wxMpConfigStorage.setToken(CommonUtils.token);
+		wxMpConfigStorage.setAesKey(CommonUtils.aeskey);
+	
+	}
+	
+	private byte[] parseHexStr2Byte(String hexStr) {  
+        if (hexStr.length() < 1)  
+                return null;  
+        byte[] result = new byte[hexStr.length()/2];  
+        for (int i = 0;i< hexStr.length()/2; i++) {  
+                int high = Integer.parseInt(hexStr.substring(i*2, i*2+1), 16);  
+                int low = Integer.parseInt(hexStr.substring(i*2+1, i*2+2), 16);  
+                result[i] = (byte) (high * 16 + low);  
+        }  
+        return result;  
+}  
+
+	private String parseByte2HexStr(byte buf[]) {
+		StringBuffer sb = new StringBuffer();
+		for (int i = 0; i < buf.length; i++) {
+			String hex = Integer.toHexString(buf[i] & 0xFF);
+			if (hex.length() == 1) {
+				hex = '0' + hex;
+			}
+			sb.append(hex.toUpperCase());
+		}
+		return sb.toString();
+	}
+
+	@Test
 	public void wechatQuickStart() {
 
 		WxMpCustomMessage message1 = WxMpCustomMessage.TEXT().toUser(david_openid).content("Hello World, " + System.currentTimeMillis()).build();
@@ -60,7 +105,7 @@ public class TestWechat {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Test
 	public void wechatGetAccessToken() throws WxErrorException {
 		System.err.println(wxMpService.getAccessToken());
@@ -82,43 +127,43 @@ public class TestWechat {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Test
 	public void wechatUserInfo() throws WxErrorException {
-		
+
 		long id = wxMpService.userGetGroup(david_openid);
 		System.err.println(id);
-		
+
 		wxMpService.userUpdateRemark(david_openid, "戴维");
 		wxMpService.userUpdateGroup(david_openid, 2);
-		
+
 		WxMpUser wxMpUser = wxMpService.userInfo(david_openid, "zh_CN");
 		System.err.println(wxMpUser);
-		
+
 		Calendar sc = Calendar.getInstance();
 		sc.set(2015, 9, 8, 0, 0, 0);
-		
+
 		Calendar ec = Calendar.getInstance();
 		ec.set(2015, 9, 10, 23, 59, 59);
-		
+
 		Date st = sc.getTime();
-		Date et=  ec.getTime();
-		
+		Date et = ec.getTime();
+
 		List<WxMpUserSummary> ls = wxMpService.getUserSummary(st, et);
 		System.err.println(ls.size());
 		for (WxMpUserSummary item : ls) {
 			System.err.println(item);
 		}
-		
+
 	}
-	
+
 	@Test
-	public void testWechatTest() {	
+	public void testWechatTest() {
 		System.err.println(CommonUtils.wechatFlag);
 		System.err.println(CommonUtils.appid);
 		System.err.println(CommonUtils.appsecrect);
 		System.err.println(CommonUtils.token);
 		System.err.println(CommonUtils.aeskey);
 	}
-	
+
 }

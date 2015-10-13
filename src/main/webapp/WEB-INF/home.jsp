@@ -1,24 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ page session="false"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@include file="/WEB-INF/include.jsp"%>
 <html>
 <head>
-<%
-	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://"
-			+ request.getServerName() + ":" + request.getServerPort()
-			+ path + "/";
-%>
-<base href="<%=basePath%>">
-<script src="js/jquery.1.10.1.min.js"></script>
-<script src="js/jquery.validate.js"></script>
-<script src="js/common.js"></script>
-<link rel="stylesheet" href="css/dophin/style.css">
-<link rel="stylesheet" href="css/dophin/external.min.css">
-<link rel="stylesheet" href="css/dophin/popup.css">
 
 <meta charset="utf-8">
 <meta name="viewport"
@@ -407,7 +392,7 @@
 			});
 
 			//test
-			$("#page2").show();
+			//$("#page2").show();
 
 			$('#share').click(function() {
 				$('#dodo').show();

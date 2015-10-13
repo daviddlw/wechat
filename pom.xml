@@ -367,7 +367,6 @@
 				<wechat.apptoken>arenacloud_token_1</wechat.apptoken>
 				<wechat.aeskey>QG7OitGVpU344C8HmYOI8AbPfFbDW4p0cu0eg5oxYIA</wechat.aeskey>
 			</properties>
-
 			<!-- <properties> <wechat.flag>prod</wechat.flag> <db.url>jdbc:mysql://192.168.9.71:3306/events</db.url> 
 				<db.username>soa</db.username> <db.password>123456</db.password> <wechat.appid>wx63ac9d2096253fc0</wechat.appid> 
 				<wechat.appsecrect>5c1ab5f0bd3872b06a823eb7c532c311</wechat.appsecrect> <wechat.apptoken>arenacloud_token_1</wechat.apptoken> 

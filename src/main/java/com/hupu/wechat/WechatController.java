@@ -102,6 +102,24 @@ public class WechatController {
 	}
 
 	@ResponseBody
+	@RequestMapping(value = "/wechat/checkIn", method = RequestMethod.GET)
+	public String checkIn(HttpServletRequest request, HttpServletResponse response) {
+		String signature = request.getParameter("signature");
+		String nonce = request.getParameter("nonce");
+		String timestamp = request.getParameter("timestamp");
+		String echostr = request.getParameter("echostr");
+
+		logger.info("signature: " + signature);
+		logger.info("nonce: " + nonce);
+		logger.info("timestamp: " + timestamp);
+		logger.info("echostr: " + echostr);
+
+		boolean isValid = wxMpService.checkSignature(timestamp, nonce, signature);
+		logger.info("isValid: " + isValid);
+		return String.valueOf(isValid);
+	}
+
+	@ResponseBody
 	@RequestMapping(value = "/wechat/demo", method = RequestMethod.GET)
 	public WxMpUser wechatIn(HttpServletRequest request, HttpServletResponse response) {
 		WxMpUser wxMpUser = new WxMpUser();
@@ -142,6 +160,49 @@ public class WechatController {
 	}
 
 	@ResponseBody
+	@RequestMapping(value = "/wechat/getUserInfo", method = RequestMethod.POST)
+	public UserInfoDTO getUserInfoDTO(Integer id, String phone) {
+		logger.info("id: " + id);
+		logger.info("phone: " + phone);
+
+		UserInfoDTO userInfoDTO = new UserInfoDTO();
+		if (id != null && id > 0) {
+			userInfoDTO = userInfoService.queryUserInfo(id);
+		} else {
+			userInfoDTO = userInfoService.queryUserInfo(phone);
+		}
+
+		return userInfoDTO;
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/wechat/deleteUserInfo", method = RequestMethod.POST)
+	public Map<String, Object> deleteUserInfo(Integer id) {
+
+		Map<String, Object> resultMap = new HashMap<>();
+		logger.info("id: " + id);
+		try {
+			int count = userInfoService.deleteUserInfo(id);
+			logger.info("delete count: " + count);
+			resultMap.put("code", "200");
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			resultMap.put("code", "500");
+		}
+
+		return resultMap;
+	}
+
+	/**
+	 * 验证微信签名，转跳home主页
+	 * 
+	 * @param request
+	 *            http请求
+	 * @param response
+	 *            http相应
+	 * @return 返回对应页面
+	 */
+	@ResponseBody
 	@RequestMapping(value = "/wechat", method = RequestMethod.GET)
 	public ModelAndView wechat(HttpServletRequest request, HttpServletResponse response) {
 
@@ -157,13 +218,13 @@ public class WechatController {
 			response.setContentType("text/html;charset=utf-8");
 			response.setStatus(HttpServletResponse.SC_OK);
 
-			String msgSignature = request.getParameter("signature");
+			String signature = request.getParameter("signature");
 			String nonce = request.getParameter("nonce");
 			String timestamp = request.getParameter("timestamp");
 			String echostr = request.getParameter("echostr");
 
-			if (StringUtils.isBlank(msgSignature)) {
-				logger.info("msgSignature: " + msgSignature);
+			if (StringUtils.isBlank(signature)) {
+				logger.info("msgSignature: " + signature);
 				response.getWriter().println("msgSignature is null");
 			}
 
@@ -178,33 +239,32 @@ public class WechatController {
 			}
 
 			if (StringUtils.isNotBlank(echostr)) {
-				if (!wxMpService.checkSignature(msgSignature, timestamp, nonce)) {
+				logger.info("signature: " + signature + ", nonce: " + nonce + ", timestamp: " + timestamp + ", echostr: " + echostr);
+
+				if (!wxMpService.checkSignature(timestamp, nonce, signature)) {
 					// 消息签名不正确，说明不是公众平台发过来的消息
-
 					logger.info("msg_sign is not correct");
+					
 					response.getWriter().println(ILLGAL_REQUEST);
+				} else {
+					logger.info("echostr: " + echostr);
+/*					WxMpCryptUtil cryptUtil = new WxMpCryptUtil(wxMpConfigStorage);
+					String plainText = cryptUtil.decrypt(echostr);*/
+//					logger.info("plainText: " + plainText);
+
+					// 说明是一个仅仅用来验证的请求，回显echostr
+					response.getWriter().println(echostr);
 				}
-				WxMpCryptUtil cryptUtil = new WxMpCryptUtil(wxMpConfigStorage);
-				String plainText = cryptUtil.decrypt(echostr);
-
-				logger.info("plainText: " + plainText);
-
-				// 说明是一个仅仅用来验证的请求，回显echostr
-				response.getWriter().println(plainText);
 			}
 
-			WxMpXmlMessage inMessage = WxMpXmlMessage.fromEncryptedXml(request.getInputStream(), wxMpConfigStorage, timestamp, nonce, msgSignature);
+			WxMpXmlMessage inMessage = WxMpXmlMessage.fromEncryptedXml(request.getInputStream(), wxMpConfigStorage, timestamp, nonce, signature);
 			WxMpXmlOutMessage outMessage = wxMpMessageRouter.route(inMessage);
 			if (outMessage != null) {
 				response.getWriter().write(outMessage.toEncryptedXml(wxMpConfigStorage));
 			}
 
-//			msgSignature = "david_signature";
-//			nonce = "nonce";
-//			timestamp = String.valueOf(System.currentTimeMillis());
-
 			Map<String, Object> queryMap = new HashMap<String, Object>();
-			queryMap.put("signature", msgSignature);
+			queryMap.put("signature", signature);
 			queryMap.put("nonce", nonce);
 			queryMap.put("timestamp", timestamp);
 			queryMap.put("echostr", echostr);
@@ -217,18 +277,11 @@ public class WechatController {
 
 		return new ModelAndView("home");
 	}
-	
-	@ResponseBody
-	@RequestMapping(value="/wechat/getUserInfo",method=RequestMethod.POST)
-	public UserInfoDTO getUserInfoDTO(String phone) {
-		logger.info("phone: " + phone);
-
-		UserInfoDTO userInfoDTO = userInfoService.queryUserInfo(phone);
-		return userInfoDTO;
-	}
 
 	@RequestMapping(value = "/home")
 	public ModelAndView home() {
-		return new ModelAndView("home");
+		ModelAndView mav = new ModelAndView("home");
+		logger.info("execute home view...");
+		return mav;
 	}
 }

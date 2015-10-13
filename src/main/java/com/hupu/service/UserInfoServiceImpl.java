@@ -28,4 +28,9 @@ public class UserInfoServiceImpl implements UserInfoService{
 		return userInfoDAO.queryUserInfoByPhone(cellphone);
 	}
 
+	@Override
+	public int deleteUserInfo(int id) {
+		return userInfoDAO.deleteUserInfo(id);
+	}
+
 }

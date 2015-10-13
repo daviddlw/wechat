@@ -21,15 +21,21 @@
 		#{gender}, #{cellphone}, now(), now(), 1)
 	</insert>
 
+	<insert id="deleteUserInfo" parameterType="int">
+		update user_info set status=-1 where id=#{id} and status>0
+	</insert>
+
 	<select id="queryUserInfo" parameterType="int" resultMap="userInfoMap">
 		select
 		id, name, gender, cellphone, create_time, update_time, status from
 		user_info where status>0 and id=#{id}
 	</select>
 
-	<select id="queryUserInfoByPhone" parameterType="String" resultMap="userInfoMap">
+	<select id="queryUserInfoByPhone" parameterType="String"
+		resultMap="userInfoMap">
 		select
-		id, name, gender, cellphone, create_time, update_time, status from
+		id, name, gender, cellphone, create_time, update_time,
+		status from
 		user_info where status>0 and cellphone=#{cellphone}
 	</select>
 
