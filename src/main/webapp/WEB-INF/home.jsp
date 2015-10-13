@@ -353,19 +353,39 @@
 		var nonceStr_arg = '<c:out value="${nonce}" />';
 		var signature_arg = '<c:out value="${signature}" />';
 
-		/* 		alert("ts: " + timestamp_arg + ", nonce: " + nonceStr_arg + ", "
-		 + signature_arg);
-		 */
 		new TouchPaging({});
 		$(function() {
-			wx.config({
+
+			$.ajax({
+				type : "get",
+				url : "http://events.arenacloud.com/wechat/share",
+				dataType : "json",
+				data:{
+                    "dynamicUrl": encodeURIComponent(location.href.split('#')[0])
+				},
+				success : function(data) {
+					wx.config({
+						debug : false,
+						appId : "wx63ac9d2096253fc0",
+						timestamp : data.timestamp,
+						nonceStr : data.nonce,
+						signature : data.signature,
+						jsApiList : [ 'onMenuShareTimeline', 'onMenuShareAppMessage' ]
+					});
+				},
+				error : function(data) {
+					//alert("连接失败！");
+				}
+			});
+
+/* 			wx.config({
 				debug : false,
 				appId : 'wx63ac9d2096253fc0',
 				timestamp : timestamp_arg,
 				nonceStr : nonceStr_arg,
 				signature : signature_arg,
 				jsApiList : [ 'onMenuShareTimeline', 'onMenuShareAppMessage' ]
-			});
+			}); */
 
 			wx.ready(function() {
 				wx.onMenuShareTimeline({
@@ -391,9 +411,13 @@
 				});
 			});
 
+			/* 			wx.error(function(res) {
+			 alert(res);
+			 alert("error");
+			 }); */
+
 			//test
 			//$("#page2").show();
-
 			$('#share').click(function() {
 				$('#dodo').show();
 			});
@@ -425,7 +449,6 @@
 										|| $.trim($('.phone').val()).length == 0)
 									return;
 								var url = "http://events.arenacloud.com/wechat/saveUserInfo";
-								//var url = "http://172.16.28.176:8080/wechat-opensdk/wechat/saveUserInfo";
 
 								$.ajax({
 									url : url,
@@ -433,7 +456,8 @@
 									type : "POST",
 									data : {
 										name : $("input[name='name']").val(),
-										sex : $("input[name='sex']:checked").val(),
+										sex : $("input[name='sex']:checked")
+												.val(),
 										phone : $("input[name='phone']").val()
 									},
 									success : function(response) {
@@ -456,24 +480,8 @@
 
 								);
 
-								/* $.post(url, {
-									data : encodeURIComponent('{"name":"'
-											+ $('name').val() + '{"sex":"'
-											+ $('sex').val() + '","phone":"'
-											+ $('phone').val() + '"}')
-
-								}, function(response) {
-									if (response.code == '200') {
-										$('#suc').show();
-										$('#page2').hide();
-										$('#dodo').hide();
-									} else {
-										document.getElementsByTagName("input")
-												.focus();
-										$('#err').show();
-									}
-								}); */
 							});
+
 		});
 	</script>
 </body>
