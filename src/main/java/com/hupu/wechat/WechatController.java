@@ -8,7 +8,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Enumeration;
 import java.util.Formatter;
 import java.util.HashMap;
 import java.util.Map;
@@ -42,8 +41,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
-
-import antlr.collections.List;
 
 import com.google.gson.Gson;
 import com.hupu.dto.UserInfoDTO;
@@ -112,6 +109,11 @@ public class WechatController {
 		logger.info("wxMpMessageRouter: " + wxMpMessageRouter);
 	}
 
+	/**
+	 * 监测是否工作正常
+	 * 
+	 * @return
+	 */
 	@ResponseBody
 	@RequestMapping(value = "/checkItWorks", method = RequestMethod.GET)
 	public String checkItWorks() {
@@ -125,6 +127,15 @@ public class WechatController {
 		return new ModelAndView("index");
 	}
 
+	/**
+	 * 微信demo页面
+	 * 
+	 * @param request
+	 *            http相应
+	 * @param response
+	 *            http请求
+	 * @return
+	 */
 	@ResponseBody
 	@RequestMapping(value = "/wechat/demo", method = RequestMethod.GET)
 	public WxMpUser wechatIn(HttpServletRequest request, HttpServletResponse response) {
@@ -139,13 +150,21 @@ public class WechatController {
 		return wxMpUser;
 	}
 
+	/**
+	 * 保存用户信息
+	 * 
+	 * @param name
+	 * @param sex
+	 * @param phone
+	 * @return
+	 */
 	@ResponseBody
 	@RequestMapping(value = "/wechat/saveUserInfo", method = RequestMethod.POST)
 	public Map<String, Object> saveUserInfo(String name, Integer sex, String phone) {
 		Map<String, Object> resultMap = new HashMap<>();
 		logger.info("name: " + name);
 		logger.info("sex: " + sex);
-		logger.info("phone: " + name);
+		logger.info("phone: " + phone);
 
 		UserInfoDTO userInfoDTO = new UserInfoDTO();
 		userInfoDTO.setName(name);
@@ -155,6 +174,7 @@ public class WechatController {
 		try {
 			int id = userInfoService.insertUserInfo(userInfoDTO);
 			logger.info("newid: " + id);
+			logger.info("add new user: " + userInfoDTO);
 
 			resultMap.put("code", "200");
 		} catch (Exception e) {
@@ -269,6 +289,15 @@ public class WechatController {
 		executeCheckAccess(request, response);
 	}
 
+	/**
+	 * 微信分享
+	 * 
+	 * @param dynamicUrl
+	 *            动态分享的连接（转发后会自动添加一系列的参数）
+	 * @param request
+	 *            http晴天
+	 * @return 分享参数
+	 */
 	@ResponseBody
 	@RequestMapping(value = "/wechat/share", method = RequestMethod.GET)
 	public Map<String, String> share(String dynamicUrl, HttpServletRequest request) {
@@ -276,9 +305,6 @@ public class WechatController {
 			String newUrl = URLDecoder.decode(dynamicUrl, "UTF-8");
 			logger.info("execute share action..." + newUrl);
 
-			// String path =
-			// "/data/pf/arenacloud/inst-8080/webapps/wechat-events/" +
-			// "ticket.txt";
 			String path = request.getSession().getServletContext().getRealPath("/") + "ticket.txt";
 			logger.info("path: " + path);
 			try {
@@ -294,9 +320,8 @@ public class WechatController {
 
 			String dealUrl = StringUtils.substringBefore(url, "#");
 			logger.info("deal url: " + dealUrl);
-			String finalUrl = StringUtils.substringBeforeLast(dealUrl, "&");
-			finalUrl = StringUtils.replace(finalUrl, "/wechat-events", "");
 
+			String finalUrl = StringUtils.replace(dealUrl, "/wechat-events", "");
 			logger.info("finalUrl: " + finalUrl);
 
 			Map<String, String> result = getWechatConfig(request, finalUrl);
@@ -309,6 +334,15 @@ public class WechatController {
 
 	}
 
+	/**
+	 * 微信活动主页
+	 * 
+	 * @param request
+	 *            http请求
+	 * @param response
+	 *            http相应
+	 * @return 主页页面
+	 */
 	@RequestMapping(value = "/home", method = RequestMethod.GET)
 	public ModelAndView home(HttpServletRequest request, HttpServletResponse response) {
 
@@ -316,14 +350,13 @@ public class WechatController {
 			startScheduleTask(request);
 			count++;
 		}
-		// return new ModelAndView("home", result);
 		return new ModelAndView("home");
 	}
 
 	/**
 	 * 启动定时任务定时扫描业务数据缓存是否有变化
 	 */
-	private void updateToken(HttpServletRequest request) {
+	private void updateJsapiTicket(HttpServletRequest request) {
 		logger.info("execute updateToken start...");
 
 		String path = request.getSession().getServletContext().getRealPath("/") + "ticket.txt";
@@ -429,27 +462,34 @@ public class WechatController {
 	}
 
 	/**
-	 * 调用远程ticket
+	 * 调用远程jsapi_ticket用作测试排除错误
 	 * 
-	 * @return
+	 * @return 返回jsapi_ticket
 	 */
+	@SuppressWarnings("unused")
 	private String getRemoteTicket() {
 		Response resp = ClientBuilder.newClient().target("http://socialmedia.hupu.com/masterkong/dongYun").request(MediaType.APPLICATION_JSON).get();
 		String result = resp.readEntity(String.class);
 		Gson gson = new Gson();
+		@SuppressWarnings("unchecked")
 		Map<String, Object> rsMap = gson.fromJson(result, Map.class);
 		String ticket = rsMap.containsKey("ticket") ? String.valueOf(rsMap.get("ticket")) : "";
 		logger.info("ticket: " + ticket);
 		return ticket;
 	}
 
+	/**
+	 * 启动定时任务
+	 * 
+	 * @param request
+	 */
 	private void startScheduleTask(final HttpServletRequest request) {
 		ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
 		Runnable scheduledTask = new Runnable() {
 
 			@Override
 			public void run() {
-				updateToken(request);
+				updateJsapiTicket(request);
 			}
 		};
 

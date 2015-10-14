@@ -352,45 +352,39 @@
 		var timestamp_arg = '<c:out value="${timestamp}" />';
 		var nonceStr_arg = '<c:out value="${nonce}" />';
 		var signature_arg = '<c:out value="${signature}" />';
-
+		var url = location.href.split('#')[0];
+		
 		new TouchPaging({});
 		$(function() {
 
 			$.ajax({
-				type : "get",
-				url : "http://events.arenacloud.com/wechat/share",
-				dataType : "json",
-				data:{
-                    "dynamicUrl": encodeURIComponent(location.href.split('#')[0])
-				},
-				success : function(data) {
-					wx.config({
-						debug : false,
-						appId : "wx63ac9d2096253fc0",
-						timestamp : data.timestamp,
-						nonceStr : data.nonce,
-						signature : data.signature,
-						jsApiList : [ 'onMenuShareTimeline', 'onMenuShareAppMessage' ]
+						type : "get",
+						url : "http://events.arenacloud.com/wechat/share",
+						dataType : "json",
+						data : {
+							"dynamicUrl" : encodeURIComponent(location.href
+									.split('#')[0])
+						},
+						success : function(data) {
+							wx.config({
+								debug : false,
+								appId : "wx63ac9d2096253fc0",
+								timestamp : data.timestamp,
+								nonceStr : data.nonce,
+								signature : data.signature,
+								jsApiList : [ 'onMenuShareTimeline',
+										'onMenuShareAppMessage' ]
+							});
+						},
+						error : function(data) {
+							//alert("连接失败！");
+						}
 					});
-				},
-				error : function(data) {
-					//alert("连接失败！");
-				}
-			});
-
-/* 			wx.config({
-				debug : false,
-				appId : 'wx63ac9d2096253fc0',
-				timestamp : timestamp_arg,
-				nonceStr : nonceStr_arg,
-				signature : signature_arg,
-				jsApiList : [ 'onMenuShareTimeline', 'onMenuShareAppMessage' ]
-			}); */
 
 			wx.ready(function() {
 				wx.onMenuShareTimeline({
 					title : '动云-最懂体育的云',
-					link : window.location.href,
+					link : url,
 					imgUrl : 'http://www.arenacloud.com/image/logo-square.jpg',
 					success : function() {
 						$('#dodo').hide();
@@ -402,7 +396,7 @@
 				wx.onMenuShareAppMessage({
 					title : '动云-最懂体育的云',
 					desc : '一站式视频点播处理服务，轻松应对海量数据的存储与访问，1.1万米深度挖掘体育行业大数据',
-					link : window.location.href,
+					link : url,
 					imgUrl : 'http://www.arenacloud.com/image/logo-square.jpg',
 					success : function() {
 						$('#dodo').hide();
@@ -411,12 +405,7 @@
 				});
 			});
 
-			/* 			wx.error(function(res) {
-			 alert(res);
-			 alert("error");
-			 }); */
-
-			//test
+			//测试信息弹出
 			//$("#page2").show();
 			$('#share').click(function() {
 				$('#dodo').show();

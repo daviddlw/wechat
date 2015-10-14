@@ -1,4 +1,4 @@
-package com.hupu.wechat;
+package com.hupu.utils;
 
 import java.util.Map;
 
@@ -17,7 +17,7 @@ import me.chanjar.weixin.mp.api.WxMpServiceImpl;
 import me.chanjar.weixin.mp.bean.WxMpXmlMessage;
 import me.chanjar.weixin.mp.bean.WxMpXmlOutMessage;
 
-import com.hupu.utils.CommonUtils;
+import com.hupu.wechat.WechatController;
 
 public class WechatUitls {
 
